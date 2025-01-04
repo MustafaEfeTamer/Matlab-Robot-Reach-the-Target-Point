@@ -205,3 +205,36 @@ function [sol_hiz, sag_hiz] = tekerlekHiziniHesapla(v, w, L)
     sol_hiz = v - ((w * L) / 2);
     sag_hiz = v + ((w * L) / 2);
 end
+
+
+% Çakışan robotları kontrol edip ekranda gösteriyorum
+function cakismalariKontrolEt(yollar, robotSayisi)
+    cakisiyor = [];
+    for i = 1:robotSayisi-1
+        for j = i+1:robotSayisi
+            % İki robotun yollarının çakışıp çakışmadığını kontrol et
+            cakisma = intersect(yollar{i}, yollar{j}, 'rows');
+            if ~isempty(cakisma)
+                cakisiyor = [cakisiyor; i, j];
+            end
+        end
+    end
+    
+    % Çakışan robotları yazdır
+    if ~isempty(cakisiyor)
+        figure('Position', [100, 100, 600, 400]);
+        hold on;
+        for k = 1:size(cakisiyor, 1)
+            text(0.5, 0.9-k*0.1, ['Robot ', num2str(cakisiyor(k, 1)), ' ile Robot ', num2str(cakisiyor(k, 2))], ...
+                 'FontSize', 14, 'HorizontalAlignment', 'center');
+        end
+        axis off;
+        title('Yolları Çakışan Robotlar');
+    else
+        disp('Çakışan hiç robot yok.');
+    end
+end
+
+% Çakışan robotları kontrol et
+cakismalariKontrolEt(yollar, robotSayisi);
+
